@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ContratoRepository extends JpaRepository<Contrato, Long> {
+public interface ContratoRepository extends JpaRepository<Contrato, Long>, ContratoRepositoryCustom {
 
     Optional<Contrato> findByNumeroContrato(String numeroContrato);
 }

@@ -6,8 +6,11 @@ import br.com.attus.contratomanager.repository.ContratoRepository;
 import br.com.attus.contratomanager.validation.ContratoValidator;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +41,7 @@ public class ContratoServiceImpl implements ContratoService {
         Contrato contratoExistente = contratoValidator.validarContratoExistente(id);
         contrato.setId(contratoExistente.getId());
 
-        return addContrato(contrato);
+        return contratoRepository.save(contrato);
     }
 
     @Override
@@ -54,6 +57,11 @@ public class ContratoServiceImpl implements ContratoService {
         contratos.forEach(contrato -> contrato.setStatus(Status.ARQUIVADO));
 
         contratoRepository.saveAll(contratos);
+    }
+
+    @Override
+    public Page<Contrato> findContratosByStatusDataCriacaoCpfCnpjPageable(Status status, String cpfCnpj, LocalDate dataCriacao, Pageable paginacao) {
+        return contratoRepository.findContratosByStatusDataCriacaoCpfCnpjPageable(status, cpfCnpj, dataCriacao, paginacao);
     }
 
 }

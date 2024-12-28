@@ -1,16 +1,22 @@
 package br.com.attus.contratomanager.controller;
 
 import br.com.attus.contratomanager.model.Contrato;
+import br.com.attus.contratomanager.model.Status;
 import br.com.attus.contratomanager.service.ContratoService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
+@Tag(name = "Contrato")
 public class ContratoController {
     @Autowired
     private ContratoService contratoService;
@@ -37,6 +43,15 @@ public class ContratoController {
     ResponseEntity<Contrato> arquivarContrato(@Valid @RequestBody List<Long> contratoIds) {
         contratoService.arquivarContrato(contratoIds);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/contratos/filtro-paginado")
+    public Page<Contrato> buscarContratos(
+            @RequestParam(required = false) Status status,
+            @RequestParam(required = false) LocalDate dataCriacao,
+            @RequestParam(required = false) String cpfCnpj,
+            Pageable paginacao) {
+        return contratoService.findContratosByStatusDataCriacaoCpfCnpjPageable(status, cpfCnpj, dataCriacao, paginacao);
     }
 
 

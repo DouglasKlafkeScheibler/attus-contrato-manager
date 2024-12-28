@@ -37,7 +37,9 @@ public class PessoaServiceImpl implements PessoaService {
         Pessoa pessoaExistente = pessoaValidator.validarPessoaExistente(id);
         pessoa.setId(pessoaExistente.getId());
 
-        return addPessoa(pessoa);
+        Pessoa pessoaFormatada = formatarCpfCnpj(pessoa);
+
+        return pessoaRepository.save(pessoaFormatada);
     }
 
     @Override
