@@ -1,7 +1,6 @@
 package br.com.attus.contratomanager.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import br.com.attus.contratomanager.dto.ContratoIdDTO;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -35,6 +34,6 @@ public class Evento {
     @ManyToOne
     @JoinColumn(name = "contrato_id")
     @NotNull(message = "Contrato é obrigatório")
-    @Schema(description = "Contrato associado ao evento", example = "{\"id\": 1}")
+    @Schema(description = "Contrato associado ao evento", implementation = ContratoIdDTO.class)
     private Contrato contrato;
 }

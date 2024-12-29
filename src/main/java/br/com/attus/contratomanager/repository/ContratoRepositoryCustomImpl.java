@@ -2,7 +2,10 @@ package br.com.attus.contratomanager.repository;
 
 import br.com.attus.contratomanager.dto.ContratoDTO;
 import br.com.attus.contratomanager.dto.EventoDTO;
-import br.com.attus.contratomanager.model.*;
+import br.com.attus.contratomanager.model.Contrato;
+import br.com.attus.contratomanager.model.QContrato;
+import br.com.attus.contratomanager.model.QPessoa;
+import br.com.attus.contratomanager.model.Status;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -31,7 +34,6 @@ public class ContratoRepositoryCustomImpl implements ContratoRepositoryCustom {
     public Page<ContratoDTO> findContratosByStatusDataCriacaoCpfCnpjPageable(Status status, String cpfCnpj, LocalDate dataCriacao, Pageable paginacao) {
         QContrato contrato = QContrato.contrato;
         QPessoa pessoa = QPessoa.pessoa;
-        QEvento evento = QEvento.evento;
 
         BooleanExpression predicate = montaPredicate(status, cpfCnpj, dataCriacao, contrato, pessoa);
 
@@ -43,8 +45,6 @@ public class ContratoRepositoryCustomImpl implements ContratoRepositoryCustom {
         totalRegistros = totalRegistros != null ? totalRegistros : 0L;
 
         List<Contrato> contratos = queryFactory.selectFrom(contrato)
-                .leftJoin(contrato.pessoas, pessoa)
-                .leftJoin(contrato.eventos, evento)
                 .where(predicate)
                 .offset(paginacao.getOffset())
                 .limit(paginacao.getPageSize())
