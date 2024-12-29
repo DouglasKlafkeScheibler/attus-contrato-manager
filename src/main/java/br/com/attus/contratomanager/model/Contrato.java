@@ -1,5 +1,6 @@
 package br.com.attus.contratomanager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -53,7 +54,7 @@ public class Contrato {
     private List<Pessoa> pessoas;
 
     @OneToMany(mappedBy = "contrato")
-    @JsonManagedReference
+    @JsonIgnore
     @Schema(description = "Eventos relacionados ao contrato", example = "[{\"id\": 1}]")
     private List<Evento> eventos;
 

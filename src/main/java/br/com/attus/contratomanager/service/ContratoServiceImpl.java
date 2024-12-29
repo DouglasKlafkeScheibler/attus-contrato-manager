@@ -1,5 +1,6 @@
 package br.com.attus.contratomanager.service;
 
+import br.com.attus.contratomanager.dto.ContratoDTO;
 import br.com.attus.contratomanager.model.Contrato;
 import br.com.attus.contratomanager.model.Status;
 import br.com.attus.contratomanager.repository.ContratoRepository;
@@ -60,7 +61,7 @@ public class ContratoServiceImpl implements ContratoService {
     }
 
     @Override
-    public Page<Contrato> findContratosByStatusDataCriacaoCpfCnpjPageable(Status status, String cpfCnpj, LocalDate dataCriacao, Pageable paginacao) {
+    public Page<ContratoDTO> findContratosByStatusDataCriacaoCpfCnpjPageable(Status status, String cpfCnpj, LocalDate dataCriacao, Pageable paginacao) {
         return contratoRepository.findContratosByStatusDataCriacaoCpfCnpjPageable(status, cpfCnpj, dataCriacao, paginacao);
     }
 

@@ -1,5 +1,6 @@
 package br.com.attus.contratomanager.controller;
 
+import br.com.attus.contratomanager.dto.ContratoDTO;
 import br.com.attus.contratomanager.model.Contrato;
 import br.com.attus.contratomanager.model.Status;
 import br.com.attus.contratomanager.service.ContratoService;
@@ -46,7 +47,7 @@ public class ContratoController {
     }
 
     @GetMapping("/contratos/filtro-paginado")
-    public Page<Contrato> buscarContratos(
+    public Page<ContratoDTO> buscarContratos(
             @RequestParam(required = false) Status status,
             @RequestParam(required = false) LocalDate dataCriacao,
             @RequestParam(required = false) String cpfCnpj,

@@ -1,11 +1,9 @@
 package br.com.attus.contratomanager.repository;
 
-import br.com.attus.contratomanager.model.Contrato;
-import br.com.attus.contratomanager.model.QContrato;
-import br.com.attus.contratomanager.model.QPessoa;
-import br.com.attus.contratomanager.model.Status;
+import br.com.attus.contratomanager.dto.ContratoDTO;
+import br.com.attus.contratomanager.dto.EventoDTO;
+import br.com.attus.contratomanager.model.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class ContratoRepositoryCustomImpl implements ContratoRepositoryCustom {
@@ -29,28 +28,33 @@ public class ContratoRepositoryCustomImpl implements ContratoRepositoryCustom {
     }
 
     @Override
-    public Page<Contrato> findContratosByStatusDataCriacaoCpfCnpjPageable(Status status, String cpfCnpj, LocalDate dataCriacao, Pageable paginacao) {
+    public Page<ContratoDTO> findContratosByStatusDataCriacaoCpfCnpjPageable(Status status, String cpfCnpj, LocalDate dataCriacao, Pageable paginacao) {
         QContrato contrato = QContrato.contrato;
         QPessoa pessoa = QPessoa.pessoa;
+        QEvento evento = QEvento.evento;
 
         BooleanExpression predicate = montaPredicate(status, cpfCnpj, dataCriacao, contrato, pessoa);
 
-        JPAQuery<Long> countQuery = queryFactory.select(contrato.count())
+        Long totalRegistros = queryFactory.select(contrato.count())
                 .from(contrato)
                 .leftJoin(contrato.pessoas, pessoa)
-                .where(predicate);
-        Long totalRegistros = countQuery.fetchOne();
+                .where(predicate)
+                .fetchOne();
         totalRegistros = totalRegistros != null ? totalRegistros : 0L;
 
-        JPAQuery<Contrato> query = queryFactory.selectFrom(contrato)
+        List<Contrato> contratos = queryFactory.selectFrom(contrato)
                 .leftJoin(contrato.pessoas, pessoa)
-                .where(predicate);
-
-        List<Contrato> contratos = query.offset(paginacao.getOffset())
+                .leftJoin(contrato.eventos, evento)
+                .where(predicate)
+                .offset(paginacao.getOffset())
                 .limit(paginacao.getPageSize())
                 .fetch();
 
-        return new PageImpl<>(contratos, paginacao, totalRegistros);
+        List<ContratoDTO> contratoDTOs = contratos.stream()
+                .map(this::mapToContratoDTO)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(contratoDTOs, paginacao, totalRegistros);
     }
 
     private BooleanExpression montaPredicate(Status status, String cpfCnpj, LocalDate dataCriacao, QContrato contrato, QPessoa pessoa) {
@@ -69,5 +73,26 @@ public class ContratoRepositoryCustomImpl implements ContratoRepositoryCustom {
         }
 
         return predicate;
+    }
+
+    private ContratoDTO mapToContratoDTO(Contrato contratoEntity) {
+        List<EventoDTO> eventoDTOs = contratoEntity.getEventos().stream()
+                .map(eventoEntity -> new EventoDTO.Builder()
+                        .id(eventoEntity.getId())
+                        .tipoEvento(eventoEntity.getTipoEvento())
+                        .dataRegistro(eventoEntity.getDataRegistro())
+                        .descricao(eventoEntity.getDescricao())
+                        .build())
+                .collect(Collectors.toList());
+
+        return new ContratoDTO.Builder()
+                .id(contratoEntity.getId())
+                .numeroContrato(contratoEntity.getNumeroContrato())
+                .dataCriacao(contratoEntity.getDataCriacao())
+                .descricao(contratoEntity.getDescricao())
+                .status(contratoEntity.getStatus())
+                .pessoas(contratoEntity.getPessoas())
+                .eventos(eventoDTOs)
+                .build();
     }
 }
