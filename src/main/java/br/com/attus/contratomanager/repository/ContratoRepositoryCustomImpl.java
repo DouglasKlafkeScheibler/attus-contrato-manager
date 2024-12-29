@@ -49,6 +49,7 @@ public class ContratoRepositoryCustomImpl implements ContratoRepositoryCustom {
                 .where(predicate)
                 .offset(paginacao.getOffset())
                 .limit(paginacao.getPageSize())
+                .orderBy(contrato.id.asc())
                 .fetch();
 
         List<ContratoDTO> contratoDTOs = contratos.stream()
