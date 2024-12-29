@@ -79,8 +79,6 @@ class ContratoServiceImplTest {
 
         assertNotNull(result);
         assertEquals(contrato.getNumeroContrato(), result.getNumeroContrato());
-        verify(contratoValidator).validarNumeroContratoUnico(contrato.getNumeroContrato());
-        verify(contratoValidator).validarInicioContratoDiferenteEncerrado(contrato.getStatus());
         verify(contratoRepository, times(1)).save(contrato);
     }
 

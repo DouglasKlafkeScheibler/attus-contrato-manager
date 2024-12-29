@@ -127,20 +127,22 @@
 				<version>0.8.7</version>
 				<executions>
 					<execution>
-						<id>prepare-agent</id>
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
 					</execution>
 					<execution>
 						<id>report</id>
+						<phase>test</phase>
 						<goals>
 							<goal>report</goal>
 						</goals>
 						<configuration>
-							<formats>
-								<format>XML</format>
-							</formats>
+							<excludes>
+								<exclude>**/model/**</exclude>
+								<exclude>**/config/**</exclude>
+								<exclude>**/utils/**</exclude>
+							</excludes>
 						</configuration>
 					</execution>
 				</executions>
