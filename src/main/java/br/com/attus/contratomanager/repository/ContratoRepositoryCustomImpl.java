@@ -37,13 +37,15 @@ public class ContratoRepositoryCustomImpl implements ContratoRepositoryCustom {
 
         BooleanExpression predicate = montaPredicate(status, cpfCnpj, dataCriacao, contrato, pessoa);
 
-        Long totalRegistros = queryFactory.select(contrato.count())
+        Long totalRegistros = queryFactory.select(contrato.id.countDistinct())
                 .from(contrato)
+                .innerJoin(pessoa).on(pessoa.in(contrato.pessoas))
                 .where(predicate)
                 .fetchOne();
         totalRegistros = totalRegistros != null ? totalRegistros : 0L;
 
-        List<Contrato> contratos = queryFactory.selectFrom(contrato)
+        List<Contrato> contratos = queryFactory.selectFrom(contrato).distinct()
+                .innerJoin(pessoa).on(pessoa.in(contrato.pessoas))
                 .where(predicate)
                 .offset(paginacao.getOffset())
                 .limit(paginacao.getPageSize())
