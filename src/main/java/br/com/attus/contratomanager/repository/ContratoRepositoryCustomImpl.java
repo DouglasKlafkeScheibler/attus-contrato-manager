@@ -39,7 +39,6 @@ public class ContratoRepositoryCustomImpl implements ContratoRepositoryCustom {
 
         Long totalRegistros = queryFactory.select(contrato.count())
                 .from(contrato)
-                .leftJoin(contrato.pessoas, pessoa)
                 .where(predicate)
                 .fetchOne();
         totalRegistros = totalRegistros != null ? totalRegistros : 0L;
