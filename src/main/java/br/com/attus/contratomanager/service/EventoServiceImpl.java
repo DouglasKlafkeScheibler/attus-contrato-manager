@@ -16,8 +16,6 @@ public class EventoServiceImpl implements EventoService {
     private EventoRepository eventoRepository;
     @Autowired
     private EventoValidator eventoValidator;
-    @Autowired
-    private EventoService eventoService;
 
     @Override
     public List<Evento> findAll() {
@@ -38,7 +36,7 @@ public class EventoServiceImpl implements EventoService {
         Evento eventoExistente = eventoValidator.validarEventoExistente(id);
         evento.setId(eventoExistente.getId());
 
-        return eventoService.addEvento(evento);
+        return this.addEvento(evento);
     }
 
     @Override
