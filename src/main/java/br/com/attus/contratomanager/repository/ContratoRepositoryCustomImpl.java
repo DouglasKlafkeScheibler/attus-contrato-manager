@@ -23,12 +23,10 @@ import java.util.stream.Collectors;
 
 @Repository
 public class ContratoRepositoryCustomImpl implements ContratoRepositoryCustom {
-    private final EntityManager entityManager;
     private final JPAQueryFactory queryFactory;
 
     @Autowired
     public ContratoRepositoryCustomImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
