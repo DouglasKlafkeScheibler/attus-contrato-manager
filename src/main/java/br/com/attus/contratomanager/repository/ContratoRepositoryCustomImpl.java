@@ -56,7 +56,7 @@ public class ContratoRepositoryCustomImpl implements ContratoRepositoryCustom {
 
         List<ContratoDTO> contratoDTOs = contratos.stream()
                 .map(this::mapToContratoDTO)
-                .collect(Collectors.toList());
+                .toList();
 
         return new PageImpl<>(contratoDTOs, paginacao, totalRegistros);
     }

@@ -6,6 +6,7 @@ import br.com.attus.contratomanager.model.Evento;
 import br.com.attus.contratomanager.model.TipoEvento;
 import br.com.attus.contratomanager.repository.ContratoRepository;
 import br.com.attus.contratomanager.repository.EventoRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -81,6 +82,8 @@ class EventoValidatorImplTest {
     void testValidarContratoExistente_ComContratoExistente_DeveNaoLancarExcecao() {
         when(contratoRepository.findById(1L)).thenReturn(Optional.of(new Contrato()));
 
-        eventoValidator.validarContratoExistente(1L);
+        Assertions.assertDoesNotThrow(() -> {
+            eventoValidator.validarContratoExistente(1L);
+        });
     }
 }

@@ -36,7 +36,7 @@ public class EventoServiceImpl implements EventoService {
         Evento eventoExistente = eventoValidator.validarEventoExistente(id);
         evento.setId(eventoExistente.getId());
 
-        return addEvento(evento);
+        return this.addEvento(evento);
     }
 
     @Override

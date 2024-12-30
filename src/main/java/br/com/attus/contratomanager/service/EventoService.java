@@ -1,7 +1,6 @@
 package br.com.attus.contratomanager.service;
 
 import br.com.attus.contratomanager.model.Evento;
-import br.com.attus.contratomanager.model.Pessoa;
 
 import java.util.List;
 import java.util.Optional;
