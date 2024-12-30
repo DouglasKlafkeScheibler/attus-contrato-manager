@@ -118,7 +118,7 @@ class ContratoValidatorImplTest {
             contratoValidator.validarContratoExistente(1L);
         });
 
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+        assertEquals(HttpStatus.NOT_FOUND, exception.getHttpStatus());
         assertEquals("Contrato não encontrado", exception.getMessage());
     }
 

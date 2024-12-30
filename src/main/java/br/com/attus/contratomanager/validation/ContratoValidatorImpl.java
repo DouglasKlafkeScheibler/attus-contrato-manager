@@ -54,7 +54,7 @@ public class ContratoValidatorImpl implements ContratoValidator{
     @Override
     public Contrato validarContratoExistente(Long contratoId) {
         return contratoRepository.findById(contratoId)
-                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, "Contrato não encontrado"));
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, "Contrato não encontrado"));
     }
 
 

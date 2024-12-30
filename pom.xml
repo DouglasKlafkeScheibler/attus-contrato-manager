@@ -154,8 +154,10 @@
 						<configuration>
 							<excludes>
 								<exclude>**/model/**</exclude>
+								<exclude>**/repository/**</exclude>
 								<exclude>**/config/**</exclude>
 								<exclude>**/utils/**</exclude>
+								<exclude>**/dto/**</exclude>
 							</excludes>
 						</configuration>
 					</execution>

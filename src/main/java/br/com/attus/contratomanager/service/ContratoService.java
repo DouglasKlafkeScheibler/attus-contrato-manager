@@ -1,6 +1,7 @@
 package br.com.attus.contratomanager.service;
 
 import br.com.attus.contratomanager.dto.ContratoDTO;
+import br.com.attus.contratomanager.dto.ContratoIdDTO;
 import br.com.attus.contratomanager.model.Contrato;
 import br.com.attus.contratomanager.model.Status;
 import org.springframework.data.domain.Page;
@@ -17,4 +18,5 @@ public interface ContratoService {
     Optional<Contrato> findById(long contratoId);
     void arquivarContrato(List<Long> contratoIds);
     Page<ContratoDTO> findContratosByStatusDataCriacaoCpfCnpjPageable(Status status, String cpfCnpj, LocalDate dataCriacao, Pageable paginacao);
+    List<ContratoIdDTO> findContratosByCpfCnpj(String cpfCnpj);
 }

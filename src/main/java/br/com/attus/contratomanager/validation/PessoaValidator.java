@@ -5,4 +5,5 @@ import br.com.attus.contratomanager.model.Pessoa;
 public interface PessoaValidator {
     void validarCpfCnpjUnico(String cpfCnpj);
     Pessoa validarPessoaExistente(Long pessoaId);
+    void validarContratosExistentes(String cpfCnpj);
 }

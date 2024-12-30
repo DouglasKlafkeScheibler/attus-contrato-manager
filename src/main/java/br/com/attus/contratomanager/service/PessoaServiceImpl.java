@@ -51,6 +51,7 @@ public class PessoaServiceImpl implements PessoaService {
     @Transactional
     public void deletePessoa(long id) {
         Pessoa pessoa = pessoaValidator.validarPessoaExistente(id);
+        pessoaValidator.validarContratosExistentes(pessoa.getCpfCnpj());
 
         pessoaRepository.delete(pessoa);
     }

@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface EventoValidator {
     Evento validarEventoExistente(Long eventoId);
+    void validarContratoExistente(Long contratoId);
 }

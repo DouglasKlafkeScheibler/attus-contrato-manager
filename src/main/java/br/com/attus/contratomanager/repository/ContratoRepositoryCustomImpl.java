@@ -1,11 +1,13 @@
 package br.com.attus.contratomanager.repository;
 
 import br.com.attus.contratomanager.dto.ContratoDTO;
+import br.com.attus.contratomanager.dto.ContratoIdDTO;
 import br.com.attus.contratomanager.dto.EventoDTO;
 import br.com.attus.contratomanager.model.Contrato;
 import br.com.attus.contratomanager.model.QContrato;
 import br.com.attus.contratomanager.model.QPessoa;
 import br.com.attus.contratomanager.model.Status;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -57,6 +59,20 @@ public class ContratoRepositoryCustomImpl implements ContratoRepositoryCustom {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(contratoDTOs, paginacao, totalRegistros);
+    }
+
+    @Override
+    public List<ContratoIdDTO> findContratosByCpfCnpj(String cpfCnpj) {
+        QContrato contrato = QContrato.contrato;
+        QPessoa pessoa = QPessoa.pessoa;
+
+        return queryFactory
+                .select(Projections.bean(ContratoIdDTO.class, contrato.id))
+                .from(contrato)
+                .innerJoin(pessoa).on(pessoa.in(contrato.pessoas))
+                .where(pessoa.cpfCnpj.eq(cpfCnpj))
+                .orderBy(contrato.id.asc())
+                .fetch();
     }
 
     private BooleanExpression montaPredicate(Status status, String cpfCnpj, LocalDate dataCriacao, QContrato contrato, QPessoa pessoa) {

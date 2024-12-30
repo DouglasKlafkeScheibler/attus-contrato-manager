@@ -25,6 +25,8 @@ public class EventoServiceImpl implements EventoService {
     @Override
     @Transactional
     public Evento addEvento(Evento evento) {
+        eventoValidator.validarContratoExistente(evento.getContrato().getId());
+
         return eventoRepository.save(evento);
     }
 

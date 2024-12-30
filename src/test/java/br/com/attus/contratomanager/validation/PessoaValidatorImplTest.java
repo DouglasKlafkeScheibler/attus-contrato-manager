@@ -1,9 +1,11 @@
 package br.com.attus.contratomanager.validation;
 
+import br.com.attus.contratomanager.dto.ContratoIdDTO;
 import br.com.attus.contratomanager.exception.ServiceException;
 import br.com.attus.contratomanager.model.Pessoa;
 import br.com.attus.contratomanager.model.TipoPessoa;
 import br.com.attus.contratomanager.repository.PessoaRepository;
+import br.com.attus.contratomanager.service.ContratoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,9 +26,10 @@ class PessoaValidatorImplTest {
 
     @InjectMocks
     private PessoaValidatorImpl pessoaValidator;
-
     @Mock
     private PessoaRepository pessoaRepository;
+    @Mock
+    private ContratoService contratoService;
 
     private Pessoa pessoa;
 
@@ -67,7 +72,7 @@ class PessoaValidatorImplTest {
             pessoaValidator.validarPessoaExistente(1L);
         });
 
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+        assertEquals(HttpStatus.NOT_FOUND, exception.getHttpStatus());
         assertEquals("Pessoa não encontrada", exception.getMessage());
     }
 
@@ -81,5 +86,28 @@ class PessoaValidatorImplTest {
         assertEquals(pessoa.getId(), result.getId());
         assertEquals(pessoa.getCpfCnpj(), result.getCpfCnpj());
         assertEquals(pessoa.getNome(), result.getNome());
+    }
+
+    @Test
+    void testValidarContratosExistentes_ComContratosAssociados_DeveLancarExcecao() {
+        List<ContratoIdDTO> contratos = Arrays.asList(
+                new ContratoIdDTO(1L),
+                new ContratoIdDTO(2L)
+        );
+        when(contratoService.findContratosByCpfCnpj(pessoa.getCpfCnpj())).thenReturn(contratos);
+
+        ServiceException exception = assertThrows(ServiceException.class, () -> {
+            pessoaValidator.validarContratosExistentes(pessoa.getCpfCnpj());
+        });
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+        assertEquals("Existem contratos associados a este CPF/CNPJ que impedem a deleção, sendo os contratos: 1, 2", exception.getMessage());
+    }
+
+    @Test
+    void testValidarContratosExistentes_SemContratosAssociados_DeveNaoLancarExcecao() {
+        when(contratoService.findContratosByCpfCnpj(pessoa.getCpfCnpj())).thenReturn(List.of());
+
+        assertDoesNotThrow(() -> pessoaValidator.validarContratosExistentes(pessoa.getCpfCnpj()));
     }
 }

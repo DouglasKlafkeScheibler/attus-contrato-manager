@@ -109,14 +109,4 @@ class PessoaServiceImplTest {
         verify(pessoaValidator, times(1)).validarPessoaExistente(1L);
         verify(pessoaRepository, times(1)).delete(pessoa);
     }
-
-//    @Test
-//    void testFormatarCpfCnpj() {
-//        Pessoa pessoaComCnpj = new Pessoa();
-//        pessoaComCnpj.setCpfCnpj("123.456.789/0001-10");
-//
-//        Pessoa result = pessoaService.formatarCpfCnpj(pessoaComCnpj);
-//
-//        assertEquals("123456789000110", result.getCpfCnpj());
-//    }
 }
